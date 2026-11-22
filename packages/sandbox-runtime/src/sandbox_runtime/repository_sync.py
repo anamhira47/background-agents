@@ -15,9 +15,15 @@ from .runtime_config import BootMode
 if TYPE_CHECKING:
     from .repo_config import RepoEntry
 
-GH_WRAPPER_REAL_PATH = "/usr/bin/gh"
+# macOS keeps /usr/bin read-only, so images there name their gh (e.g. Homebrew's).
+GH_WRAPPER_REAL_PATH = os.environ.get("OPENINSPECT_REAL_GH") or "/usr/bin/gh"
 GH_WRAPPER_INSTALL_PATH = Path("/usr/local/bin/gh")
-GH_WRAPPER_BODY = Path(__file__).with_name("gh-wrapper.sh").read_text()
+GH_WRAPPER_BODY = (
+    Path(__file__)
+    .with_name("gh-wrapper.sh")
+    .read_text()
+    .replace('REAL_GH="/usr/bin/gh"', f'REAL_GH="{GH_WRAPPER_REAL_PATH}"', 1)
+)
 DEFAULT_GIT_CLONE_TIMEOUT_SECONDS = 300.0
 DEFAULT_GIT_FETCH_TIMEOUT_SECONDS = 120.0
 

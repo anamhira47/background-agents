@@ -495,7 +495,7 @@ class OpenCodeServer:
             "--port",
             str(OPENCODE_PORT),
             "--hostname",
-            "0.0.0.0",
+            "127.0.0.1",
             "--print-logs",  # Print logs to stdout for debugging
             cwd=workdir,  # Start in repo directory
             env=env,

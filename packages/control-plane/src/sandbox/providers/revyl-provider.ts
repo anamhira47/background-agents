@@ -61,8 +61,8 @@ const BOOTSTRAP_PATH_SUFFIX = "/sandbox-bootstrap";
 const MIN_LIFETIME_SECONDS = 60;
 const MAX_LIFETIME_SECONDS = 24 * 60 * 60;
 const POLL_INTERVAL_MS = 2_000;
-/** Kept under the control plane's 240 s connect watchdog, which counts from the reservation. */
-const ACTIVE_WAIT_MS = 180_000;
+/** Kept under the control plane's 420 s connect watchdog, which counts from the reservation. */
+const ACTIVE_WAIT_MS = 360_000;
 const STOPPING_WAIT_MS = 120_000;
 /** A save takes up to 60 s in the guest plus the host's release. */
 const STOP_SAVE_WAIT_MS = 300_000;

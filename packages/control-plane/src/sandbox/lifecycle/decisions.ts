@@ -102,7 +102,7 @@ export interface CircuitBreakerConfig {
  */
 export const DEFAULT_CIRCUIT_BREAKER_CONFIG: CircuitBreakerConfig = {
   threshold: 3,
-  windowMs: 5 * 60 * 1000, // 5 minutes
+  windowMs: 10 * 60 * 1000, // 10 minutes: must exceed CONNECT_WATCHDOG_MS
 };
 
 /**
@@ -240,8 +240,11 @@ export interface SpawnConfig {
  * (DEFAULT_BOOT_BUDGET_CONFIG). Runtimes that predate early connect still boot in full before
  * connecting, which is why the value keeps its earlier margin rather than shrinking to a launch
  * bound. See open-inspect/background-agents#1363 for the pending-prompt recovery gap on this path.
+ *
+ * Raised from 240 s for Revyl: a persistent computer whose save is restored from off-host
+ * storage can take several minutes to start before its runtime connects.
  */
-const CONNECT_WATCHDOG_MS = 240_000;
+const CONNECT_WATCHDOG_MS = 420_000;
 
 /** Latest a VM launch may start after reservation; enforced by both launch endpoints. */
 export const PENDING_VM_REFERENCE_LAUNCH_WINDOW_MS = 30_000;

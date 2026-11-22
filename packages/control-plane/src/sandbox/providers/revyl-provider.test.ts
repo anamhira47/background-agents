@@ -186,7 +186,7 @@ describe("RevylSandboxProvider.createSandbox", () => {
 
     expect(error).toBeInstanceOf(SandboxLaunchRejectedError);
     expect((error as SandboxProviderError).errorType).toBe("permanent");
-    expect(now() - NOW).toBeLessThan(240_000);
+    expect(now() - NOW).toBeLessThan(420_000);
   });
 
   it("rejects the launch when the guest launcher fails", async () => {

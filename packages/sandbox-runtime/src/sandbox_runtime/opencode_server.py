@@ -433,6 +433,9 @@ class OpenCodeServer:
             },
         }
 
+        if openai_base_url := os.environ.get("OPENAI_BASE_URL"):
+            opencode_config["provider"]["openai"] = {"options": {"baseURL": openai_base_url}}
+
         memory_file = memory_path(resolve_opencode_global_config_dir())
         if memory_file.is_file() and memory_file.stat().st_size:
             opencode_config["instructions"] = [str(memory_file)]

@@ -10,9 +10,12 @@ SRC="$(cd "${1:?usage: install.sh <checkout>}" && pwd)"
 OI=/opt/openinspect
 APP=$OI/app
 USER_HOME=/Users/computer
-export HOME=$USER_HOME HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1
+export HOME=$USER_HOME HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_CLEANUP=1 \
+  HOMEBREW_NO_INSTALL_UPGRADE=1
 
-brew install gh ripgrep bash uv node@24 coreutils
+for formula in gh ripgrep bash uv node@24 coreutils; do
+  brew install "$formula"
+done
 NODE_BIN="$(brew --prefix node@24)/bin"
 export PATH="$NODE_BIN:/opt/homebrew/bin:$PATH"
 

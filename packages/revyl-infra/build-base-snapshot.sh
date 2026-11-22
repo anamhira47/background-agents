@@ -11,7 +11,7 @@ name="${3:?snapshot name}"
 
 id="$(revyl computer create --os macos --persistent --timeout 2h --wait --wait-timeout 10m --json |
   jq -er '.computer_session_id')"
-echo "computer $id is running; if this script fails, delete it with: revyl computer delete $id" >&2
+echo "computer $id is running; if this script fails, delete it with: revyl computer delete $id --yes" >&2
 
 revyl computer exec "$id" --timeout 5m -- git clone --depth 1 --branch "$ref" "$url" oi-src
 # shellcheck disable=SC2016 # expanded by the guest's shell
@@ -23,7 +23,7 @@ revyl computer stop "$id" --wait --wait-timeout 10m --json >/dev/null
 for attempt in $(seq 1 40); do
   if revyl computer snapshot save "$id" --name "$name" --json >/dev/null; then
     echo "REVYL_BASE_SNAPSHOT=$name"
-    echo "The source computer is no longer needed: revyl computer delete $id" >&2
+    echo "The source computer is no longer needed: revyl computer delete $id --yes" >&2
     exit 0
   fi
   echo "snapshot not ready (attempt $attempt); its save may still be copying off host" >&2

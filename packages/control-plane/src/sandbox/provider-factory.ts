@@ -13,6 +13,8 @@ import type { SandboxProvider } from "./provider";
 import { createBoatProvider, type BoatSandboxProvider } from "./providers/boat-provider";
 import { createDaytonaProvider, type DaytonaSandboxProvider } from "./providers/daytona-provider";
 import { createEc2Provider, type Ec2SandboxProvider } from "./providers/ec2-provider";
+import { createRevylProvider, type RevylSandboxProvider } from "./providers/revyl-provider";
+import { createRevylComputerClient, DEFAULT_REVYL_API_URL } from "./revyl-computer-client";
 import type { SandboxBootstrapStore } from "./bootstrap";
 import {
   createE2BProvider,
@@ -222,6 +224,31 @@ function createEc2ProviderFromEnv(
   });
 }
 
+function createRevylProviderFromEnv(
+  env: Env,
+  bootstrapStore: SandboxBootstrapStore | undefined
+): RevylSandboxProvider {
+  if (!env.REVYL_API_KEY?.trim() || !env.REVYL_BASE_SNAPSHOT?.trim()) {
+    throw new Error(
+      "REVYL_API_KEY and REVYL_BASE_SNAPSHOT are required when SANDBOX_PROVIDER=revyl"
+    );
+  }
+  if (!bootstrapStore) {
+    throw new Error("SANDBOX_PROVIDER=revyl requires a session bootstrap store");
+  }
+  return createRevylProvider(
+    createRevylComputerClient({
+      apiUrl: env.REVYL_API_URL?.trim() || DEFAULT_REVYL_API_URL,
+      apiKey: env.REVYL_API_KEY.trim(),
+    }),
+    bootstrapStore,
+    {
+      scmProvider: resolveScmProviderFromEnv(env.SCM_PROVIDER),
+      baseSnapshot: env.REVYL_BASE_SNAPSHOT.trim(),
+    }
+  );
+}
+
 export function createSandboxProviderFromEnv(env: Env, backend: "boat"): BoatSandboxProvider;
 export function createSandboxProviderFromEnv(env: Env, backend: "daytona"): DaytonaSandboxProvider;
 export function createSandboxProviderFromEnv(env: Env, backend: "e2b"): E2BSandboxProvider;
@@ -237,6 +264,11 @@ export function createSandboxProviderFromEnv(
 ): Ec2SandboxProvider;
 export function createSandboxProviderFromEnv(
   env: Env,
+  backend: "revyl",
+  bootstrapStore: SandboxBootstrapStore
+): RevylSandboxProvider;
+export function createSandboxProviderFromEnv(
+  env: Env,
   backend?: SandboxBackendName,
   bootstrapStore?: SandboxBootstrapStore
 ): SandboxProvider;
@@ -248,6 +280,8 @@ export function createSandboxProviderFromEnv(
   switch (backend) {
     case "ec2":
       return createEc2ProviderFromEnv(env, bootstrapStore);
+    case "revyl":
+      return createRevylProviderFromEnv(env, bootstrapStore);
     case "boat":
       return createBoatProviderFromEnv(env);
     case "daytona":

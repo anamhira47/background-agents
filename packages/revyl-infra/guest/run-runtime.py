@@ -45,6 +45,7 @@ def run(path: Path) -> None:
             "HOME": str(home),
             "USER": account.pw_name,
             "LOGNAME": account.pw_name,
+            "OPENINSPECT_REAL_GH": "/opt/homebrew/bin/gh",
             "PATH": environment.get("PATH") or FALLBACK_PATH,
         }
     )

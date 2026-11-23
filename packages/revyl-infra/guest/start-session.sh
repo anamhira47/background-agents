@@ -14,4 +14,5 @@ case "$token" in "" | *[!A-Za-z0-9_-]*) echo "bootstrap token is malformed" >&2;
 mkdir -p "$OI_STATE"
 rm -f "$OI_STATE/session.json" "$OI_STATE/boot-complete"
 printf 'OPENINSPECT_BOOTSTRAP_URL=%s\nOPENINSPECT_BOOTSTRAP_TOKEN=%s\n' "$url" "$token" >"$OI_STATE/bootstrap"
+if [ "$(id -u)" -eq 0 ]; then chown computer "$OI_STATE" "$OI_STATE/bootstrap"; fi
 sudo -n /bin/launchctl kickstart -k system/ai.openinspect.sandbox

@@ -62,7 +62,6 @@ json.dump(
         ]),
         "OPENINSPECT_BIN_INSTALL_DIR": f"{home}/.local/bin",
         "OI_SCM_CRED_CACHE_DIR": f"{home}/.cache/openinspect/scm",
-        "OPENINSPECT_REAL_GH": "/opt/homebrew/bin/gh",
     },
     open(path, "w"),
 )
